@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <TextView
+            android:id="@+id/match_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="Match Number"
+            android:textColor="#000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/teamA"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/match_number"
+            android:layout_below="@+id/match_number"
+            android:text="Team A   "
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/nn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/match_number"
+            android:layout_toEndOf="@+id/teamA"
+            android:text="v/s  "
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/teamB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/match_number"
+            android:layout_toEndOf="@+id/nn"
+            android:text="Team B"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/match_number"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="23dp"
+            android:text="Time"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+</LinearLayout>
