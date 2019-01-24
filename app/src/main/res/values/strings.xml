@@ -1,3 +1,33 @@
 <resources>
     <string name="app_name">Scores</string>
+    <string-array name="array1">
+        <item>A</item>
+        <item>B</item>
+    </string-array>
+    <string-array name="array2">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="array3">
+        <item>Singles1</item>
+        <item>Singles2</item>
+        <item>Doubles1</item>
+        <item>Singles3</item>
+        <item>Doubles2</item>
+        <item>Match</item>
+    </string-array>
+    <string-array name="array4">
+        <item>Set1</item>
+        <item>Set2</item>
+        <item>Set3</item>
+        <item>Set4</item>
+        <item>Set5</item>
+        <item>Set6</item>
+        <item>Set7</item>
+        <item>Set8</item>
+        <item>Set9</item>
+        <item>Set10</item>
+
+    </string-array>
 </resources>

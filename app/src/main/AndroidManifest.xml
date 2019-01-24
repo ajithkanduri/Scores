@@ -9,19 +9,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".SIngleEvents"></activity>
+        <activity android:name=".BadmintionActivity" />
+        <activity android:name=".resultsActivity" />
+        <activity android:name=".cricketActivity" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
-        <activity android:name=".EventsActivity" />
+        <activity android:name=".EventsActivity1" >
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity android:name=".ActionActivity" />
         <activity android:name=".AddMatch" />
         <activity android:name=".UpcomingMatches" />
         <activity android:name=".LiveMatches" />
-        <activity android:name=".UpdateScore"></activity>
+        <activity android:name=".UpdateScore" />
     </application>
 
 </manifest>

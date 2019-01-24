@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 public class LiveMatchesAdapter extends RecyclerView.Adapter<LiveMatchesAdapter.LiveViewHolder>{
@@ -21,7 +24,9 @@ public class LiveMatchesAdapter extends RecyclerView.Adapter<LiveMatchesAdapter.
     ArrayList<String> timelist;
     Context context;
     String parent;
-    public LiveMatchesAdapter(Context context,ArrayList<String> matchnolist,ArrayList<String> teamAlist,ArrayList<String> teamBlist,ArrayList<String> timelist,String parent)
+    String category;
+    ArrayList<String> ts;
+    public LiveMatchesAdapter(Context context,ArrayList<String> matchnolist,ArrayList<String> teamAlist,ArrayList<String> teamBlist,ArrayList<String> timelist,String parent,String category,ArrayList<String> ts)
     {
         this.context = context;
         this.matchnolist = matchnolist;
@@ -29,6 +34,8 @@ public class LiveMatchesAdapter extends RecyclerView.Adapter<LiveMatchesAdapter.
         this.teamBlist = teamBlist;
         this.timelist = timelist;
         this.parent = parent;
+        this.category = category;
+        this.ts = ts;
     }
     @NonNull
     @Override
@@ -47,7 +54,7 @@ public class LiveMatchesAdapter extends RecyclerView.Adapter<LiveMatchesAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAlertDialog(matchnolist.get(position),teamAlist.get(position),teamBlist.get(position),timelist.get(position));
+                createAlertDialog(ts.get(position),matchnolist.get(position),teamAlist.get(position),teamBlist.get(position),timelist.get(position));
             }
         });
     }
@@ -70,33 +77,62 @@ public class LiveMatchesAdapter extends RecyclerView.Adapter<LiveMatchesAdapter.
             time = itemView.findViewById(R.id.time);
         }
     }
-    private void createAlertDialog(final String matchnumber, final String teamA, final String teamB, final String time)
+    private void createAlertDialog(final String ts,final String matchnumber, final String teamA, final String teamB, final String time)
     {
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 //set title
-                .setTitle("Are you sure to Exit")
+                .setTitle("Is the match started??")
                 //set message
-                .setMessage("Exiting will call finish() method")
+                .setMessage("Click Yes to Update Score!!")
                 //set positive button
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what would happen when positive button is clicked
-                        Intent intent = new Intent(context,UpdateScore.class);
-                        intent.putExtra("MatchNumber",matchnumber);
-                        intent.putExtra("Team A",teamA);
-                        intent.putExtra("Team B",teamB);
-                        intent.putExtra("Time",time);
-                        intent.putExtra("Parent",parent);
-                        context.startActivity(intent);
+                        DatabaseHelper databaseReference = new DatabaseHelper(context);
+                        databaseReference.AddtoDatabase(parent,matchnumber);
+                        if(category.equals("type1")) {
+                            Intent intent = new Intent(context, UpdateScore.class);
+                            intent.putExtra("MatchNumber", matchnumber);
+                            intent.putExtra("Team A", teamA);
+                            intent.putExtra("Team B", teamB);
+                            intent.putExtra("Time", time);
+                            intent.putExtra("Parent", parent);
+                            intent.putExtra("ts",ts);
+                            context.startActivity(intent);
+                        }
+                        else if(category.equals("cricket"))
+                        {
+                            Intent intent = new Intent(context, cricketActivity.class);
+                            intent.putExtra("MatchNumber", matchnumber);
+                            intent.putExtra("Team A", teamA);
+                            intent.putExtra("Team B", teamB);
+                            intent.putExtra("Time", time);
+                            intent.putExtra("Parent", parent);
+                            intent.putExtra("ts",ts);
+                            context.startActivity(intent);
+                        }
+                        else if(category.equals("type2"))
+                        {
+                            Intent intent = new Intent(context, BadmintionActivity.class);
+                            intent.putExtra("MatchNumber", matchnumber);
+                            intent.putExtra("Team A", teamA);
+                            intent.putExtra("Team B", teamB);
+                            intent.putExtra("Time", time);
+                            intent.putExtra("Parent", parent);
+                            intent.putExtra("ts",ts);
+                            context.startActivity(intent);
+                        }
                     }
 
                 })
                 //set negative button
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what should happen when negative button is clicked
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scores").child("Live Matches").child(parent).child(ts);
+                        reference.setValue(null);
                         Toast.makeText(context,"Nothing Happened",Toast.LENGTH_LONG).show();
                     }
                 })

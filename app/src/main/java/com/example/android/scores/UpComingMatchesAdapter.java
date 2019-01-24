@@ -24,9 +24,10 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
     ArrayList<String> teamAlist;
     ArrayList<String> teamBlist;
     ArrayList<String> timelist;
+    ArrayList<String> ts;
     Context context;
     String parent;
-    public UpComingMatchesAdapter(Context context,ArrayList<String> matchnolist,ArrayList<String> teamAlist,ArrayList<String> teamBlist,ArrayList<String> timelist,String parent)
+    public UpComingMatchesAdapter(Context context,ArrayList<String> matchnolist,ArrayList<String> teamAlist,ArrayList<String> teamBlist,ArrayList<String> timelist,String parent,ArrayList<String> ts)
     {
         this.context = context;
         this.matchnolist = matchnolist;
@@ -34,6 +35,7 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
         this.teamBlist = teamBlist;
         this.timelist = timelist;
         this.parent = parent;
+        this.ts = ts;
     }
     @NonNull
     @Override
@@ -52,7 +54,7 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAlertDialog(matchnolist.get(position),teamAlist.get(position),teamBlist.get(position),timelist.get(position));
+                createAlertDialog(ts.get(position),matchnolist.get(position),teamAlist.get(position),teamBlist.get(position),timelist.get(position));
             }
         });
     }
@@ -75,13 +77,13 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
             time = itemView.findViewById(R.id.time);
         }
     }
-    private void createAlertDialog(final String matchnumber, final String teamA, final String teamB, final String time)
+    private void createAlertDialog(final String ts, final String matchnumber, final String teamA, final String teamB, final String time)
     {
         AlertDialog alertDialog = new AlertDialog.Builder(context)
                 //set title
-                .setTitle("Are you sure to Exit")
+                .setTitle("Is the start started??")
                 //set message
-                .setMessage("Exiting will call finish() method")
+                .setMessage("Click Yes to Update Score!!,No to Delete Match")
                 //set positive button
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
@@ -91,7 +93,7 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
                         progressDialog.show();
                         final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Scores").child("Upcoming Matches").child(parent);
                         DatabaseReference reference = databaseReference.child(matchnumber);
-                        reference.removeValue();
+                        reference.setValue(null);
                         progressDialog.dismiss();
 //                        databaseReference.addValueEventListener(new ValueEventListener() {
 //                            @Override
@@ -111,37 +113,43 @@ public class UpComingMatchesAdapter extends RecyclerView.Adapter<UpComingMatches
 //
 //                            }
 //                        });
-                        addtoLive(matchnumber,teamA,teamB,time);
+                        addtoLive(ts,matchnumber,teamA,teamB,time);
                     }
 
                 })
                 //set negative button
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //set what should happen when negative button is clicked
-                        Toast.makeText(context,"Nothing Happened",Toast.LENGTH_LONG).show();
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scores").child("Upcoming Matches").child(parent).child(ts);
+                        reference.setValue(null);
+                        Toast.makeText(context,"Deleted!!",Toast.LENGTH_LONG).show();
                     }
                 })
                 .show();
     }
 
-    private void addtoLive(String matchnumber, String teamA, String teamB, String time) {
+    private void addtoLive(String ts,String matchnumber, String teamA, String teamB, String time) {
         ProgressDialog progressDialog = MyProgressDialog();
         progressDialog.show();
-        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Scores").child("Live Matches").child(parent).child(matchnumber);
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Scores").child("Live Matches").child(parent).child(ts);
         HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("Team A",teamA);
-        hashMap.put("Team B",teamB);
-        hashMap.put("Time",time);
-        hashMap.put("TAScore","0");
-        hashMap.put("TBScore","0");
+        hashMap.put("title",matchnumber);
+        hashMap.put("teamA",teamA);
+        hashMap.put("teamB",teamB);
+        hashMap.put("time",time);
+        hashMap.put("scoreA","0");
+        hashMap.put("scoreB","0");
+        hashMap.put("eventID",parent);
         database.setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context,"Match Has Been Added Successfully",Toast.LENGTH_SHORT);
             }
         });
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Scores").child("Upcoming Matches").child(parent).child(ts);
+        reference.setValue(null);
         progressDialog.dismiss();
     }
     private ProgressDialog MyProgressDialog() {

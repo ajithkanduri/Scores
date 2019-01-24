@@ -20,6 +20,7 @@ public class UpcomingMatches extends AppCompatActivity {
     ArrayList<String> teamA = new ArrayList<>();
     ArrayList<String> teamB = new ArrayList<>();
     ArrayList<String> time = new ArrayList<>();
+    ArrayList<String> ts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,19 +34,25 @@ public class UpcomingMatches extends AppCompatActivity {
     {
         final ProgressDialog progressDialog = MyProgressDialog();
         progressDialog.show();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Scores").child("Upcoming Matches").child(parent);
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Scores").child("Upcoming Matches").child(parent);
         databaseReference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                matcheNo.clear();
+                teamA.clear();
+                teamB.clear();
+                time.clear();
+                ts.clear();
                 for (DataSnapshot dataSnapshot1:dataSnapshot.getChildren())
                 {
-                    matcheNo.add(dataSnapshot1.getKey());
-                    teamA.add(dataSnapshot1.child("Team A").getValue().toString());
-                    teamB.add(dataSnapshot1.child("Team B").getValue().toString());
-                    time.add(dataSnapshot1.child("Time").getValue().toString());
+                    ts.add(dataSnapshot1.getKey());
+                    matcheNo.add(dataSnapshot1.child("title").getValue().toString());
+                    teamA.add(dataSnapshot1.child("teamA").getValue().toString());
+                    teamB.add(dataSnapshot1.child("teamB").getValue().toString());
+                    time.add(dataSnapshot1.child("time").getValue().toString());
                 }
-                UpComingMatchesAdapter upComingMatchesAdapter = new UpComingMatchesAdapter(UpcomingMatches.this,matcheNo,teamA,teamB,time,parent);
+                UpComingMatchesAdapter upComingMatchesAdapter = new UpComingMatchesAdapter(UpcomingMatches.this,matcheNo,teamA,teamB,time,parent,ts);
                 recyclerView.setAdapter(upComingMatchesAdapter);
                 progressDialog.dismiss();
             }
