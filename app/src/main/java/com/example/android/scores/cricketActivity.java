@@ -53,7 +53,7 @@ public class cricketActivity extends AppCompatActivity {
         scoreB = findViewById(R.id.scoreB);
         wicketA = findViewById(R.id.wicketsA);
         wicketB = findViewById(R.id.wicketsB);
-        overA = findViewById(R.id.wicketsA);
+        overA = findViewById(R.id.oversA);
         overB = findViewById(R.id.oversB);
         final CheckBox checkBox = findViewById(R.id.checkBox);
 
